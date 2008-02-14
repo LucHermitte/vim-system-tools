@@ -8,9 +8,12 @@
 " Last Update:	$Date$
 "------------------------------------------------------------------------
 cd <sfile>:p:h
-15,$MkVimball! system_utils
+let save_rtp = &rtp
+let &rtp = expand('<sfile>:p:h:h').','.&rtp
+18,$MkVimball! system_utils
 set modifiable
 set buftype=
+let &rtp = save_rtp
 finish
 autoload/lh/system.vim
 doc/system_utils.txt
