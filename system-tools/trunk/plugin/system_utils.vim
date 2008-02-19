@@ -2,7 +2,7 @@
 " File:		system_utils.vim					{{{1
 " Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
 "		<URL:http://hermitte.free.fr/vim>
-" Version:	2.0.0
+" Version:	2.0.1
 " Created:	28th aug 2002
 " Last Update:	27th Jul 2006
 "------------------------------------------------------------------------
@@ -546,11 +546,6 @@ function! s:Go_cmd() " {{{3
   set shellpipe=>
   :call s:DetectSystem()
 endfunction " }}}3
-" ----------------------------------------------------------------------
-function! SystemCmd(cmdName)
-  " @todo add some checkings
-  return s:{a:cmdName}
-endfunction
 " }}}2
 " ----------------------------------------------------------------------
 " Auto-config {{{2
@@ -570,6 +565,11 @@ else
   call s:DetectSystem()
 endif
 " Shell }}}1
+" ----------------------------------------------------------------------
+function! SystemCmd(cmdName)
+  " @todo add some checkings
+  return s:{a:cmdName}
+endfunction
 "=============================================================================
 let &cpo=s:cpo_save
 
