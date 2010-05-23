@@ -2,8 +2,8 @@
 " $Id$
 " File:		autoload/lh/system.vim                                   {{{1
 " Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
-"		<URL:http://hermitte.free.fr/vim/>
-" Version:	2.0.0
+"		<URL:http://code.google.com/p/lh-vim/>
+" Version:	2.1.0
 " Created:	03rd Feb 2007
 " Last Update:	$Date$
 "------------------------------------------------------------------------
@@ -18,6 +18,8 @@
 " 		Vim 7+ only
 " 		Code moved to autoload/lh/system.vim
 " 		Relies on lh-vim-lib
+" 	 v2.1.0
+" 	 	Made compatible to lh-vim-lib 2.2.0
 " TODO:		«missing features»
 " }}}1
 "=============================================================================
@@ -66,7 +68,7 @@ function! lh#system#FixPathName(pathname,...)
 	" should also test long directory-names...
 	" Best: AVOID command.com !!!
 	if &verbose >= 1
-	  call lh#common#ErrorMsg('FixPathName: '. 
+	  call lh#common#error_msg('FixPathName: '. 
 		\ 'Problem expected because of the space in <'.pathname.'>')
 	endif
       else
@@ -420,7 +422,7 @@ function! s:EnsurePathLastDepth(path)
   " call input("LastDepth isdirectory(".a:path.") = ".isdirectory(a:path))
   if !isdirectory(a:path)
     if filereadable(a:path) " {{{3
-      call lh#common#ErrorMsg("A file is found were a folder is expected : " . a:path)
+      call lh#common#error_msg("A file is found were a folder is expected : " . a:path)
       return 0 	" exit
     endif " }}}3
     let v:errmsg=""
@@ -453,7 +455,7 @@ function! s:EnsurePathLastDepth(path)
 	endif
       endif
     else " Other systems {{{3
-      call lh#common#ErrorMsg(
+      call lh#common#error_msg(
 	    \ "I don't know how to create directories on your system."
 	    \ "\nAny solution is welcomed! ".
 	    \ "Please, contact me at <hermitte"."@"."free.fr>")
@@ -461,10 +463,10 @@ function! s:EnsurePathLastDepth(path)
     "
     " ¿ any error ? {{{3
     if strlen(v:errmsg) != 0
-      call lh#common#ErrorMsg(v:errmsg)
+      call lh#common#error_msg(v:errmsg)
       return 0
     elseif !isdirectory(a:path)
-      call lh#common#ErrorMsg("<".path."> can't be created!")
+      call lh#common#error_msg("<".path."> can't be created!")
       return 0
     endif
     " }}}3
