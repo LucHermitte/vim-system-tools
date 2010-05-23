@@ -1,8 +1,8 @@
 "=============================================================================
-" File:		system_utils.vim					{{{1
+" File:		plugin/system_utils.vim					{{{1
 " Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
-"		<URL:http://hermitte.free.fr/vim>
-" Version:	2.0.1
+"		<URL:http://code.google.com/p/lh-vim/>
+" Version:	2.1.0
 " Created:	28th aug 2002
 " Last Update:	27th Jul 2006
 "------------------------------------------------------------------------
@@ -33,6 +33,8 @@
 " 		Vim 7+ only
 " 		Code moved to autoload/lh/system.vim
 " 		Relies on lh-vim-lib
+" 	 v2.1.0
+" 	 	Made compatible to lh-vim-lib 2.2.0
 "
 " }}}2
 " TODO:		Support other environments.
@@ -128,7 +130,7 @@ function! s:DetectSystem()
     let s:sort   = 'sort'
   else              " Other systems {{{2
     let s:system = 'unknown'
-    call lh#common#ErrorMsg(
+    call lh#common#error_msg(
 	  \ "I don't know the typical system-programs for your configuration."
 	  \."\nAny solution is welcomed! ".
 	  \ "Please, contact me at <hermitte"."@"."free.fr>")
