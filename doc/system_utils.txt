@@ -3,7 +3,7 @@
 
 
 		system_utils Plugin MANUAL	by Luc Hermitte
-			version 2.0.0		<hermitte {at} free {dot} fr>
+			version 2.1.0		<hermitte {at} free {dot} fr>
 
 
 ------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ And don't forget to add this help file to Vim documentation ; cf.
 Where to get this plugin~
 
 This plugin can be downloaded:
-- on my web site: <http://hermitte.free.fr/vim/general.php>
+- on my web site: <http://code.google.com/p/lh-vim/>
 - on sourceforge: <http://vim.sourceforge.net/scripts/script.php?script_id=???>
 
 
@@ -253,6 +253,6 @@ I need to thank:
 
 
 ------------------------------------------------------------------------------
- © Luc Hermitte, 2001-2008 <http://hermitte.free.fr/vim/>
+ © Luc Hermitte, 2001-2010 <http://code.google.com/p/lh-vim/>
  VIM: let b:VS_language = 'american' 
  vim:ts=8:sw=4:tw=80:fo=tcq2:isk=!-~,^*,^\|,^\":ft=help:

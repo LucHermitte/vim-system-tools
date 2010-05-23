@@ -8,7 +8,7 @@
 " Last Update:	$Date$
 "------------------------------------------------------------------------
 let s:version = '2.1.0'
-let s:project = 'system_utils'
+let s:project = 'system_tools'
 cd <sfile>:p:h
 try 
   let save_rtp = &rtp
