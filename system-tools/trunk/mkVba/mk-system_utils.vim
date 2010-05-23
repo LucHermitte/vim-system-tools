@@ -20,6 +20,7 @@ finally
   let &rtp = save_rtp
 endtry
 finish
+system_tools.README
 autoload/lh/system.vim
 doc/system_utils.txt
 plugin/system_utils.vim
