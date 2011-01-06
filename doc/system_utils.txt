@@ -3,7 +3,7 @@
 
 
 		system_utils Plugin MANUAL	by Luc Hermitte
-			version 2.1.0		<hermitte {at} free {dot} fr>
+			version 2.1.1		<hermitte {at} free {dot} fr>
 
 
 ------------------------------------------------------------------------------
@@ -165,6 +165,7 @@ usable form (by the shell and the tool wrapped) thanks to |FixPathName()|.
 
 *SysPrint()*	concatenates and prints the content of the specified files to
 		the standard output.
+*SysCD()*       changes the current directory.
 *SysRemove()*	deletes the specified files.
 *SysRmdir()*	deletes the specified directories.
 *SysMkdir()*	creates the specified directories.
@@ -199,6 +200,7 @@ Exemples~
 
 Default implementation of the different wrappers~
     Wrappers		*nix prog.	MsWindows prog. ~
+      |SysCD|	 	  cd		  cd
       |SysPrint()|	  cat		  TYPE
       |SysRemove()|	  rm		  DEL
       |SysRmdir()|	  rm -r		  RD /S/Q
@@ -253,6 +255,6 @@ I need to thank:
 
 
 ------------------------------------------------------------------------------
- © Luc Hermitte, 2001-2010 <http://code.google.com/p/lh-vim/>
+ © Luc Hermitte, 2001-2011 <http://code.google.com/p/lh-vim/>
  VIM: let b:VS_language = 'american' 
  vim:ts=8:sw=4:tw=80:fo=tcq2:isk=!-~,^*,^\|,^\":ft=help:

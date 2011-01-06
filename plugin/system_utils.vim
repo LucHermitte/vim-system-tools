@@ -2,7 +2,7 @@
 " File:		plugin/system_utils.vim					{{{1
 " Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
 "		<URL:http://code.google.com/p/lh-vim/>
-" Version:	2.1.0
+" Version:	2.2.1
 " Created:	28th aug 2002
 " Last Update:	27th Jul 2006
 "------------------------------------------------------------------------
@@ -35,6 +35,8 @@
 " 		Relies on lh-vim-lib
 " 	 v2.1.0
 " 	 	Made compatible to lh-vim-lib 2.2.0
+" 	 v2.1.1
+" 	 	SysCD
 "
 " }}}2
 " TODO:		Support other environments.
@@ -43,7 +45,7 @@
 
 " Avoid reinclusion {{{1
 if exists("g:loaded_system_utils") && 
-      \ (!exists('g:force_load_system_utils') || !g:force_load_system_utils)
+      \ (!exists('g:force_reload_system_utils') || !g:force_reload_system_utils)
   finish
 endif
 let g:loaded_system_utils = 1
@@ -113,6 +115,7 @@ function! s:DetectSystem()
     let s:rmdir  = s:bin_path.'rm -r'
     let s:mkdir  = s:bin_path.'mkdir'
     let s:sort   = s:bin_path.'sort'
+	let s:cd     = 'cd'
 
   " elseif            Windows & dos-like systems {{{2
   elseif            
@@ -128,6 +131,7 @@ function! s:DetectSystem()
     let s:rmdir  = 'rd /S/Q'
     let s:mkdir  = 'md'
     let s:sort   = 'sort'
+	let s:cd     = 'cd /D'
   else              " Other systems {{{2
     let s:system = 'unknown'
     call lh#common#error_msg(
@@ -197,6 +201,11 @@ endfunction
 " Function: SysSort( file1 [, ...] ) : string                {{{2
 function! SysSort(...)
   return s:call('SysSort', a:000)
+endfunction
+"------------------------------------------------------------------------
+" Function: SysCD( path [, ...] ) : string                   {{{2
+function! SysCD(...)
+  return s:call('SysCD', a:000)
 endfunction
 " }}}2
 "------------------------------------------------------------------------
