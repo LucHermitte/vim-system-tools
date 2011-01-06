@@ -3,11 +3,11 @@
 " File:		mkVba/mk-system_utils.vim
 " Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
 "		<URL:http://code.google.com/p/lh-vim/>
-" Version:	2.1.0
+" Version:	2.1.1
 " Created:	06th Nov 2007
 " Last Update:	$Date$
 "------------------------------------------------------------------------
-let s:version = '2.1.0'
+let s:version = '2.1.1'
 let s:project = 'system_tools'
 cd <sfile>:p:h
 try 

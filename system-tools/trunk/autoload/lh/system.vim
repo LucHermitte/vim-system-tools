@@ -3,7 +3,7 @@
 " File:		autoload/lh/system.vim                                   {{{1
 " Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
 "		<URL:http://code.google.com/p/lh-vim/>
-" Version:	2.1.0
+" Version:	2.1.1
 " Created:	03rd Feb 2007
 " Last Update:	$Date$
 "------------------------------------------------------------------------
@@ -20,6 +20,8 @@
 " 		Relies on lh-vim-lib
 " 	 v2.1.0
 " 	 	Made compatible to lh-vim-lib 2.2.0
+" 	 v2.1.1
+" 	 	SysCD()
 " TODO:		«missing features»
 " }}}1
 "=============================================================================
@@ -314,6 +316,31 @@ function! lh#system#SysMove(...)
 	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
 	else
 	  echoerr "SysMove: Non portable option: ".a:{i}
+	  return ''
+	endif
+      else
+	let a_i = a:{i}
+      endif
+    else                " files
+      let a_i = lh#system#FixPathName(a:{i})
+    endif
+    let res = res . ' ' . a_i
+  endwhile 
+  return res
+endfunction
+" }}}2
+"------------------------------------------------------------------------
+" Function: SysCD( path [, ...] ) : string                   {{{2
+function! lh#system#SysCD(...)
+  let res = SystemCmd('cd')
+  let i = 0
+  while i != a:0
+    let i = i + 1
+    if a:{i} =~ '^[-+]' " options
+      if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
+	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
+	else
+	  echoerr "SysCD: Non portable option: ".a:{i}
 	  return ''
 	endif
       else
