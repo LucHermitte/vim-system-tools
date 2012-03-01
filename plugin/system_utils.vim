@@ -2,7 +2,7 @@
 " File:		plugin/system_utils.vim					{{{1
 " Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
 "		<URL:http://code.google.com/p/lh-vim/>
-" Version:	2.2.1
+" Version:	2.1.1
 " Created:	28th aug 2002
 " Last Update:	27th Jul 2006
 "------------------------------------------------------------------------
