@@ -1,5 +1,5 @@
 *system_utils.txt*	API plugin wrapping external file- and text-tools
-*system_utils.vim*	For Vim version 7.0.+	Last change: 14th Feb 2008
+*system_utils.vim*	For Vim version 7.0.+	Last change: 14st Mar 2012
 
 
 		system_utils Plugin MANUAL	by Luc Hermitte
@@ -255,6 +255,6 @@ I need to thank:
 
 
 ------------------------------------------------------------------------------
- © Luc Hermitte, 2001-2011 <http://code.google.com/p/lh-vim/>
+ © Luc Hermitte, 2001-2012 <http://code.google.com/p/lh-vim/>
  VIM: let b:VS_language = 'american' 
  vim:ts=8:sw=4:tw=80:fo=tcq2:isk=!-~,^*,^\|,^\":ft=help:
