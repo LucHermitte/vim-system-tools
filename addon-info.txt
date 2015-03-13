@@ -1,0 +1,12 @@
+{
+  "name" : "system-tools",
+  "version" : "dev",
+  "author" : "Luc Hermitte <http://github.com/LucHermitte>",
+  "maintainer" : "Luc Hermitte <http://github.com/LucHermitte>",
+  "repository" : {"type": "git", "url": "git@github.com:LucHermitte/vim-system-tools.git"},
+  "dependencies" : {
+      "lh-vim-lib" : {"type" : "git", "url" : "git@github.com:LucHermitte/lh-vim-lib.git"}
+  },
+  "description" : "API plugin wrapping external file- and text-tools"
+}
+
