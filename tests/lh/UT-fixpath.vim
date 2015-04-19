@@ -1,10 +1,10 @@
 "=============================================================================
 " File:         addons/move2github/vim-system-tools/tests/lh/UT-fixpath.vim {{{1
 " Author:       Luc Hermitte <EMAIL:hermitte {at} gmail {dot} com>
-"		<URL:http://code.google.com/p/lh-vim/>
-" Version:      «0.0.1.»
+"		<URL:http://github.com/LucHermitte/vim-system-tools>
+" Version:      2.2.0
 " Created:      15th Mar 2015
-" Last Update:  $Date$
+" Last Update:  19th Apr 2015
 "------------------------------------------------------------------------
 " Description:
 "       Test FixPathName()

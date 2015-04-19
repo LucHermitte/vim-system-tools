@@ -1,82 +1,65 @@
 "=============================================================================
-" File:		plugin/system_utils.vim					{{{1
-" Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
-"		<URL:http://code.google.com/p/lh-vim/>
-" Version:	2.1.1
-" Created:	28th aug 2002
-" Last Update:	27th Jul 2006
+" File:         plugin/system_utils.vim                                 {{{1
+" Author:       Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
+"               <URL:http://code.google.com/p/lh-vim/>
+" Version:      2.2.0
+" Created:      28th aug 2002
+" Last Update:  19th Apr 2015
 "------------------------------------------------------------------------
-" Description:	VimL wrappers for external utilities and shells
+" Description:  VimL wrappers for external utilities and shells
 "
 "------------------------------------------------------------------------
-" Installation:	Drop the file in a {rtp}/plugin/ directory.
-" 		On MsWindows system, if you have installed unixutils or any
-" 		other unix-like text/file environment, then in your .vimrc,
-" 		set 'g:unix_layer_installed' to 1.
+" Installation: Drop the file in a {rtp}/plugin/ directory.
+"               On MsWindows system, if you have installed unixutils or any
+"               other unix-like text/file environment, then in your .vimrc,
+"               set 'g:unix_layer_installed' to 1.
 "
-" Dependencies:	Can take advantage of the presence of searchInRuntime.vim
-" 		Vim 6.0+
-" 
-" History:	{{{2
-" 	v 1.0	First version come from fix_d_name.vim and ensure_path.vim:
-" 		two plugins that, once, were parts of Triggers.vim.
-" 		Also includes the main part of _vimrc_win
-" 	v 1.07	Improvements, bug fixes and new commands :Uniq & :Sort
-" 	v 1.08	SysCat() changed into SysPrint()
-" 	v 1.09  Sort functions have been chaged to the very optimized ones
-" 	        proposed by Piet Delport on Vim ML.
-" 	        :Sort accept an optional argument: the name of a comparaison
-" 	        function
-" 	v 1.10  EmuleUniq() doesn't mess with the unnamed register anymore.
-" 	v 1.11  Also use $CYGWIN to detect cygwin.
-" 	v 2.0.0
-" 		Vim 7+ only
-" 		Code moved to autoload/lh/system.vim
-" 		Relies on lh-vim-lib
-" 	 v2.1.0
-" 	 	Made compatible to lh-vim-lib 2.2.0
-" 	 v2.1.1
-" 	 	SysCD
+" Dependencies: Can take advantage of the presence of searchInRuntime.vim
+"               Vim 6.0+
+"
+" History:      {{{2
+"       v 1.0   First version come from fix_d_name.vim and ensure_path.vim:
+"               two plugins that, once, were parts of Triggers.vim.
+"               Also includes the main part of _vimrc_win
+"       v 1.07  Improvements, bug fixes and new commands :Uniq & :Sort
+"       v 1.08  SysCat() changed into SysPrint()
+"       v 1.09  Sort functions have been chaged to the very optimized ones
+"               proposed by Piet Delport on Vim ML.
+"               :Sort accept an optional argument: the name of a comparaison
+"               function
+"       v 1.10  EmuleUniq() doesn't mess with the unnamed register anymore.
+"       v 1.11  Also use $CYGWIN to detect cygwin.
+"       v 2.0.0
+"               Vim 7+ only
+"               Code moved to autoload/lh/system.vim
+"               Relies on lh-vim-lib
+"        v2.1.0
+"               Made compatible to lh-vim-lib 2.2.0
+"        v2.1.1
+"               SysCD
+"        v2.2.0
+"               Functions moved to lh-vim-lib
 "
 " }}}2
-" TODO:		Support other environments.
+" TODO:         Support other environments.
 " }}}1
 "=============================================================================
 
 " Avoid reinclusion {{{1
-if exists("g:loaded_system_utils") && 
+if exists("g:loaded_system_utils") &&
       \ (!exists('g:force_reload_system_utils') || !g:force_reload_system_utils)
   finish
 endif
-let g:loaded_system_utils = 1
+let g:loaded_system_utils = 220
 let s:cpo_save=&cpo
 set cpo&vim
 let s:sfile = expand('<sfile>:p')
 " }}}1
 "=============================================================================
-" Function: FixPathName(pathname [, shellslash [, quote_char ]])	{{{1
-function! FixPathName(pathname,...) 
-  " Default value for the quote character
-  let quote_char = ''
-  " Determine if 'shellslash' exists (dos-like platforms)
-  if has('win16') || has('win32') || has('dos16') || has('dos32') || has('os2')
-    if lh#system#SystemDetected() == 'msdos'
-      let shellslash = 0
-    else
-      let shellslash = &shellslash
-    endif
-  else "unix
-    let shellslash = 1
-  endif
-  " Determine if we will use slashes or backslashes to distinguish directories
-  if a:0 >= 1	" 
-    let shellslash = a:1
-    if a:0 >= 2
-      let quote_char = a:2
-    endif
-  endif
-
-  return lh#system#FixPathName(a:pathname, shellslash, quote_char)
+" Function: FixPathName(pathname [, shellslash [, quote_char ]])        {{{1
+function! FixPathName(pathname,...)
+  echoerr "FixPathName is deprecated, please use lh#path#fix from lh-vim-lib"
+  return call('lh#path#fix', [a:pathname] + a:000)
 endfunction
 " }}}1
 "------------------------------------------------------------------------
@@ -100,9 +83,9 @@ function! s:DetectSystem()
     else
       " Problem: how to distinguish the use of unixutils-Zsh over cygwin-bash?
       if ($OSTYPE == "cygwin") || ($TERM == "cygwin") || ($CYGWIN != '')
-	let s:bin_path = '/usr/bin/'
+        let s:bin_path = '/usr/bin/'
       else
-	let s:bin_path = '\'
+        let s:bin_path = '\'
       endif
       let s:system = 'unix'
     endif
@@ -115,12 +98,12 @@ function! s:DetectSystem()
     let s:rmdir  = s:bin_path.'rm -r'
     let s:mkdir  = s:bin_path.'mkdir'
     let s:sort   = s:bin_path.'sort'
-	let s:cd     = 'cd'
+    let s:cd     = 'cd'
 
   " elseif            Windows & dos-like systems {{{2
-  elseif            
-	\ has('win16') || has('win32') || has('dos16') || has('dos32') 
-	\ || has('os2')
+  elseif
+        \ has('win64') || has('win16') || has('win32') || has('dos16') || has('dos32')
+        \ || has('os2')
     let s:system = 'msdos'
     let s:print  = 'type'
     let s:remove = 'del'
@@ -131,13 +114,13 @@ function! s:DetectSystem()
     let s:rmdir  = 'rd /S/Q'
     let s:mkdir  = 'md'
     let s:sort   = 'sort'
-	let s:cd     = 'cd /D'
+    let s:cd     = 'cd /D'
   else              " Other systems {{{2
     let s:system = 'unknown'
     call lh#common#error_msg(
-	  \ "I don't know the typical system-programs for your configuration."
-	  \."\nAny solution is welcomed! ".
-	  \ "Please, contact me at <hermitte"."@"."free.fr>")
+          \ "I don't know the typical system-programs for your configuration."
+          \."\nAny solution is welcomed! ".
+          \ "Please, contact me at <hermitte"."@"."free.fr>")
   endif " }}}2
 endfunction
 " }}}1
@@ -214,27 +197,27 @@ endfunction
 " ---
 " Version from: Piet Delport <pjd {at} 303.za {dot} net>
 " histdel() does not not in standalone in a command => cf the function
-" command! -range=% Uniq 
+" command! -range=% Uniq
       " \ silent <line1>,<line2>g/^\%<<line2>l\(.*\)\n\1$/d
       " \ | let @/ =  (histdel("search", -1) ? histget("search", -1) : '')
 " ---
 
-command! -range=% -nargs=0 Uniq	<line1>,<line2>call EmuleUniq()
+command! -range=% -nargs=0 Uniq <line1>,<line2>call EmuleUniq()
 
-" Function: EmuleUniq() range                            
+" Function: EmuleUniq() range
 " Use: As it is a `range' function, call it with:
-" 	:%call EmuleUniq()
-" 	:'<,'>call EmuleUniq()
-" 	:3,6call EmuleUniq()
-" 	etc
+"       :%call EmuleUniq()
+"       :'<,'>call EmuleUniq()
+"       :3,6call EmuleUniq()
+"       etc
 function! EmuleUniq() range
   let l1 = a:firstline
   let l2 = a:lastline
   if l1 < l2
     " Version1 from: Preben 'Peppe' Guldberg <peppe {at} xs4all {dot} nl>
     " silent exe l1 . ',' . (l2 - 1) . 's/^\(.*\)\%(\n\%<' . (l2 + 1)
-	  " \ . 'l\1$\)\+/\1/e'
-    
+          " \ . 'l\1$\)\+/\1/e'
+
     " Version from: Piet Delport <pjd {at} 303.za {dot} net>
     " silent exe l1.','l2.'g/^\%<'.l2.'l\(.*\)\n\1$/d'
 
@@ -242,45 +225,45 @@ function! EmuleUniq() range
     " <line1>,<line2>-g/^\(.*\)\n\1$/d
     silent exe l1.','l2.'-g/^\(.*\)\n\1$/d _'
 
-    call histdel('search', -1)		" necessary
-    " let @/ = histget('search', -1)	" useless within a function
+    call histdel('search', -1)          " necessary
+    " let @/ = histget('search', -1)    " useless within a function
   endif
 endfunction
 
-" Based on the initial version proposed on the Vim ML by 
-" Thomas Köhler <jean-luc {at} picard.franken {dot} de>
+" Based on the initial version proposed on the Vim ML by
+" Thomas K?hler <jean-luc {at} picard.franken {dot} de>
 function! EmuleUniq0() range
   let l = a:firstline
   let e = a:lastline
-  let crt = getline(l)		" current line
-  while l < e     		" while we're not on the last line
-    let l2 = l + 1			" look next line 
-    let nxt = getline(l2)		" -- idem
-    while (crt == nxt) && (l2<=e)	" while checked line matches current one
-      let l2 = l2 + 1				" ... check next line
-      let nxt = getline(l2)			
+  let crt = getline(l)          " current line
+  while l < e                   " while we're not on the last line
+    let l2 = l + 1                      " look next line
+    let nxt = getline(l2)               " -- idem
+    while (crt == nxt) && (l2<=e)       " while checked line matches current one
+      let l2 = l2 + 1                           " ... check next line
+      let nxt = getline(l2)
     endwhile
     let l2 = l2 - 1
-    if l2 != l				" if there is more than one occurence
-      silent exe (l+1).','.l2.'delete _' |	" delete the redundant lines
-      let e = e - (l2 - l)			" correct the last line number
+    if l2 != l                          " if there is more than one occurence
+      silent exe (l+1).','.l2.'delete _' |      " delete the redundant lines
+      let e = e - (l2 - l)                      " correct the last line number
     endif
-    let l = l + 1			" go to the next line
-    let crt = nxt			" update the current line
-  endwhile			" and endloop ...
+    let l = l + 1                       " go to the next line
+    let crt = nxt                       " update the current line
+  endwhile                      " and endloop ...
 endfunction
 " }}}2
 "------------------------------------------------------------------------
 " Function: EmuleSort() range                            {{{2
 " Use: As it is a `range' function, call it with:
-" 	:%call EmuleSort()
-" 	:'<,'>call EmuleSort()
-" 	:3,6call EmuleSort()
-" 	etc
+"       :%call EmuleSort()
+"       :'<,'>call EmuleSort()
+"       :3,6call EmuleSort()
+"       etc
 " Based on Robert Webb version (from Vim's documentation)
 " Required as Microsoft's sort.exe is not case sensitive since MsDos 3.0 ...
 " (smart move!)
-" command! -range=% -nargs=0 Sort	<line1>,<line2>call EmuleSort('Strcmp')
+" command! -range=% -nargs=0 Sort       <line1>,<line2>call EmuleSort('Strcmp')
 
 func! Strcmp(str1, str2)
   if     (a:str1 < a:str2) | return -1
@@ -303,12 +286,12 @@ func! s:SortR(start, end, cmp)
       " Need to put it before the partition.  Swap lines i and partition.
       let partition = partition + 1
       if (result == 0)
-	let middle = partition
+        let middle = partition
       endif
       if (i != partition)
-	let str2 = getline(partition)
-	call setline(i, str2)
-	call setline(partition, str)
+        let str2 = getline(partition)
+        call setline(i, str2)
+        call setline(partition, str)
       endif
     endif
     let i = i + 1
@@ -332,12 +315,12 @@ function! EmuleSort(cmp) range
 endfunction
 " }}}2
 "
-command! -range=% -nargs=* -complete=function Sort	
+command! -range=% -nargs=* -complete=function Sort
       \ <line1>,<line2>call s:BISortWrap(<f-args>)
 
 " Function: BISort() range -- by Piet Delport            {{{2
 function! s:BISortWrap(...) range                " {{{3
-  if (a:0 == 1) 
+  if (a:0 == 1)
     if !exists('*'.a:1)
       echoerr a:1 . ' is not a valid function name!'
     else
@@ -409,44 +392,44 @@ endfunction
 " Command: :EnsurePath     {{{1
 "------------------------------------------------------------------------
 " Purpose:              {{{2
-" 	Proposes a command and a function that make sure a directory exists.
-" 	If the directory didn't exist before the call, it is created.
-" 	If the parent directories of the required directory do not exist, they
-" 	are created on the way.
+"       Proposes a command and a function that make sure a directory exists.
+"       If the directory didn't exist before the call, it is created.
+"       If the parent directories of the required directory do not exist, they
+"       are created on the way.
 " Implementation Notes: {{{2
 " (*) isdirectory() seems to require paths defined with forward slashes (even
 " on Win Me, command.com and 'shellslash'=0 ; and the spaces must not be
 " escaped... It is too simple otherwise.
-" (*) On the same WinMe : 
+" (*) On the same WinMe :
 "     - "system('md c:\verylongname')" and "system('md c:\verylongname\foo')"
 "       work.
-"     - "system('md c:\spaced name')" does not work !!! 
+"     - "system('md c:\spaced name')" does not work !!!
 "       while !md "c:\spaced name" does... That's very odd
-"     - "system('md "c:\spaced name"')" does not work either ... 
+"     - "system('md "c:\spaced name"')" does not work either ...
 " (*) `mkdir' (from cygwin) is very permissive regarding the use of quotes and
 " double-quotes. The only constraint is to have the spaces escaped.
 " Tested on:            {{{2
-" 	WinMe + command.com
-" 	WinMe + cygwin (the VIM version, I used, being the one released on
-" 		the VIM web site and ftps for PC/MsWindows systems).
-" 		BTW, if you run VIM from the MsWindows files explorer and want
-" 		to use cygwin commands (like mkdir here), be sure to have your
-" 		$path correctly set.
-" 	WinXP + cygwin (same comments as above)
+"       WinMe + command.com
+"       WinMe + cygwin (the VIM version, I used, being the one released on
+"               the VIM web site and ftps for PC/MsWindows systems).
+"               BTW, if you run VIM from the MsWindows files explorer and want
+"               to use cygwin commands (like mkdir here), be sure to have your
+"               $path correctly set.
+"       WinXP + cygwin (same comments as above)
 " Retest on:
-" 	Win95 + command.com & cygwin
-" 	WinNT + cmd32 & zsh & cygwin
-" 	Sun/Solaris + tcsh
+"       Win95 + command.com & cygwin
+"       WinNT + cmd32 & zsh & cygwin
+"       Sun/Solaris + tcsh
 " }}}2
 "------------------------------------------------------------------------
-command! -nargs=1 -complete=expression EnsurePath 
+command! -nargs=1 -complete=expression EnsurePath
       \ call lh#system#EnsurePath(<args>)
 "------------------------------------------------------------------------
 " Main function        <public>  {{{2
 " Returns 0 : 0  -> the directory hasn't been created successfully
 "         1 : ok -> the directory has been created successfully
 " Note: for MsWindows system, this function transforms the path before
-" anything else. 
+" anything else.
 function! EnsurePath(path)
   return lh#system#EnsurePath(a:path)
 endfunction
@@ -483,7 +466,7 @@ function! s:Go_bash() " {{{3
     endif
     if &shell !~ 'bash'  " bash not found...
       call confirm("Change the path to your bash installation.\n"
-	    \. 'Check <'.s:sfile.'>', '&OK', 1, "Error")
+            \. 'Check <'.s:sfile.'>', '&OK', 1, "Error")
       return
     endif
   endif
@@ -521,7 +504,7 @@ function! s:Go_zsh() " {{{3
     endif
     if &shell !~ 'sh'  " zsh not found...
       call confirm("Change the path to your Zsh installation.\n"
-	    \. 'Check <'.s:sfile.'>', '&OK', 1, "Error")
+            \. 'Check <'.s:sfile.'>', '&OK', 1, "Error")
       return
     endif
   endif
@@ -544,10 +527,10 @@ function! s:Go_cmd() " {{{3
     " Or Windows Millenium
     set shell=command.com
     set noshellslash
-  elseif has("win32")	" NT, 2000, XP (?) ; 95&Me if the previous case
+  elseif has("win32")   " NT, 2000, XP (?) ; 95&Me if the previous case
     " set shell=C:\WINNT\system32\cmd.exe
     let &shell=$COMSPEC
-    "set shellslash	???
+    "set shellslash     ???
   else | return
   endif
   set shellcmdflag=/c

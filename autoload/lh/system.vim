@@ -1,28 +1,28 @@
 "=============================================================================
-" $Id$
-" File:		autoload/lh/system.vim                                   {{{1
-" Author:	Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
-"		<URL:http://code.google.com/p/lh-vim/>
-" Version:	2.2.1
-" Created:	03rd Feb 2007
-" Last Update:	$Date$
+" File:         autoload/lh/system.vim                                   {{{1
+" Author:       Luc Hermitte <EMAIL:hermitte {at} free {dot} fr>
+"               <URL:http://code.google.com/p/lh-vim/>
+" Version:      2.2.0
+" Created:      03rd Feb 2007
+" Last Update:  19th Apr 2015
 "------------------------------------------------------------------------
-" Description:	VimL wrappers for external utilities and shells
-" 
+" Description:  VimL wrappers for external utilities and shells
+"
 "------------------------------------------------------------------------
 " Installation:
-" 	Drop this file into {rtp}/autoload/lh/
-" 	Requires Vim 7+
-" History:	
-" 	 v2.0.0
-" 		Vim 7+ only
-" 		Code moved to autoload/lh/system.vim
-" 		Relies on lh-vim-lib
-" 	 v2.1.0
-" 	 	Made compatible to lh-vim-lib 2.2.0
-" 	 v2.1.1
-" 	 	SysCD()
-" TODO:		«missing features»
+"       Drop this file into {rtp}/autoload/lh/
+"       Requires Vim 7+
+" History:
+"        v2.0.0
+"               Vim 7+ only
+"               Code moved to autoload/lh/system.vim
+"               Relies on lh-vim-lib
+"        v2.1.0
+"               Made compatible to lh-vim-lib 2.2.0
+"        v2.1.1
+"               SysCD()
+"        v2.2.0
+"               Functions moved to lh-vim-lib
 " }}}1
 "=============================================================================
 
@@ -38,84 +38,30 @@ if !exists('*SystemDetected')
 endif
 
 "=============================================================================
-" Function: FixPathName(pathname [, shellslash [, quote_char ]])	{{{1
-function! lh#system#FixPathName(pathname,...) 
-  " Parameters       {{{2
-  " Ignore the last slash or backslash character, if any
-  let pathname	 = matchstr(a:pathname, '^.*[^/\\]')
-  " Default value for the quote character
-  let quote_char = ''
-  " Determine if 'shellslash' exists (dos-like platforms)
-  if lh#system#OnDOSWindows()
-    if lh#system#SystemDetected() == 'msdos'
-      let shellslash = 0
-    else
-      let shellslash = &shellslash
-    endif
-  else "unix
-    let shellslash = 1
-  endif
-  " Determine if we will use slashes or backslashes to distinguish directories
-  if a:0 >= 1	" 
-    let shellslash = a:1
-    if a:0 >= 2
-      let quote_char = a:2
-    endif
-  endif
-
-  " Smart definition of quote chars for $COMSPEC
-  if (lh#system#SystemDetected() == 'msdos') && !shellslash && (''==quote_char)
-    if (&shell =~ 'command\.com') 
-      if pathname =~ ' '
-	" should also test long directory-names...
-	" Best: AVOID command.com !!!
-	if &verbose >= 1
-	  call lh#common#error_msg('FixPathName: '. 
-		\ 'Problem expected because of the space in <'.pathname.'>')
-	endif
-      else
-	let quote_char = ''
-      endif
-    else
-      let quote_char = '"'
-    endif
-  endif
-
-  " Fix the pathname {{{2
-  if shellslash
-    " return substitute(dname, '\\\([^ ]\|$\)', '/\1', 'g')
-    let res = substitute(
-	  \ substitute(pathname, '\\\([^ ]\|$\)', '/\1', 'g'),
-	  \ '\(^\|[^\\]\) ', '\1\\ ', 'g')
-  else
-    " return substitute(
-	  " \ substitute(pathname, '\([^\\]\) ', '\1\\ ', 'g'), 
-	  " \ '/', '\\', 'g')
-    let res = substitute(
-	  \ substitute(pathname, '\\ ', ' ', 'g'), 
-	  \ '/', '\\', 'g')
-  endif
-  " Note: problem to take care (that explains the complex substition schemes): 
-  " sometimes the path passed to the function mix the two writtings, e.g.:
-  " "c:\Program Files/longpath/some\ spaces/foo"
-  " }}}2
-  return quote_char . res . quote_char
+" Function: FixPathName(pathname [, shellslash [, quote_char ]])        {{{1
+function! lh#system#FixPathName(pathname,...) abort
+  echomsg "lh#system#FixPathName is deprecated, please use lh#path#fix from lh-vim-lib"
+  return call('lh#path#fix', [a:pathname] + a:000)
 endfunction
 " }}}1
 "------------------------------------------------------------------------
+
 " Function: UnixLayerInstalled() : boolean   {{{1
 function! lh#system#UnixLayerInstalled()
-  return exists('g:unix_layer_installed') && g:unix_layer_installed
+  echomsg "lh#system#UnixLayerInstalled is deprecated, please use lh#os#has_unix_layer_installed from lh-vim-lib"
+  return lh#os#has_unix_layer_installed()
 endfunction
 
 " Function: SystemDetected() : string        {{{1
-function! lh#system#SystemDetected()
-  return SystemDetected()
+function! lh#system#SystemDetected() abort
+  echomsg "lh#system#SystemDetected is deprecated, please use lh#os#system_detected from lh-vim-lib"
+  return lh#os#system_detected()
 endfunction
 
 " Function: SystemDetected() : string        {{{1
-function! lh#system#OnDOSWindows()
-  return has('win16') || has('win32') || has('dos16') || has('dos32') || has('os2')
+function! lh#system#OnDOSWindows() abort
+  echomsg "lh#system#OnDOSWindows is deprecated, please use lh#os#OnDOSWindows from lh-vim-lib"
+  return lh#os#OnDOSWindows()
 endfunction
 
 " }}}1
@@ -129,19 +75,19 @@ function! lh#system#SysPrint(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
-	else
-	  echoerr "SysPrint: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
+        else
+          echoerr "SysPrint: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -154,22 +100,22 @@ function! lh#system#SysRemove(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
-	elseif a:{i} =~ '^-r$\|-R\|^--r\%[ecursive]$' | let a_i = '/S'
-	elseif a:{i} =~ '^-i$\|^--i\%[interactive]$'  | let a_i = '/P'
-	elseif a:{i} =~ '^-f$\|^--f\%[orce]$'         | let a_i = '/F'
-	else
-	  echoerr "SysRemove: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
+        elseif a:{i} =~ '^-r$\|-R\|^--r\%[ecursive]$' | let a_i = '/S'
+        elseif a:{i} =~ '^-i$\|^--i\%[interactive]$'  | let a_i = '/P'
+        elseif a:{i} =~ '^-f$\|^--f\%[orce]$'         | let a_i = '/F'
+        else
+          echoerr "SysRemove: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -182,19 +128,19 @@ function! lh#system#SysRmdir(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
-	else
-	  echoerr "SysRmdir: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
+        else
+          echoerr "SysRmdir: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -207,19 +153,19 @@ function! lh#system#SysMkdir(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
-	else
-	  echoerr "SysMkdir: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
+        else
+          echoerr "SysMkdir: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -232,22 +178,22 @@ function! lh#system#SysCopy(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
-	" elseif a:{i} =~ '^-r$\|-R\|^--r\%[ecursive]$' | let a_i = '/S'
-	elseif a:{i} =~ '^-i$\|^--i\%[interactive]$'  | let a_i = '/-Y'
-	elseif a:{i} =~ '^-f$\|^--f\%[orce]$'         | let a_i = '/Y'
-	else
-	  echoerr "SysCopy: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
+        " elseif a:{i} =~ '^-r$\|-R\|^--r\%[ecursive]$' | let a_i = '/S'
+        elseif a:{i} =~ '^-i$\|^--i\%[interactive]$'  | let a_i = '/-Y'
+        elseif a:{i} =~ '^-f$\|^--f\%[orce]$'         | let a_i = '/Y'
+        else
+          echoerr "SysCopy: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -260,22 +206,22 @@ function! lh#system#SysCopyDir(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
-	" elseif a:{i} =~ '^-r$\|-R\|^--r\%[ecursive]$' | let a_i = '/S'
-	elseif a:{i} =~ '^-i$\|^--i\%[interactive]$'  | let a_i = '/-Y'
-	elseif a:{i} =~ '^-f$\|^--f\%[orce]$'         | let a_i = '/Y'
-	else
-	  echoerr "SysCopy: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
+        " elseif a:{i} =~ '^-r$\|-R\|^--r\%[ecursive]$' | let a_i = '/S'
+        elseif a:{i} =~ '^-i$\|^--i\%[interactive]$'  | let a_i = '/-Y'
+        elseif a:{i} =~ '^-f$\|^--f\%[orce]$'         | let a_i = '/Y'
+        else
+          echoerr "SysCopy: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -288,19 +234,19 @@ function! lh#system#SysTouch(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
-	else
-	  echoerr "SysTouch: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
+        else
+          echoerr "SysTouch: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -313,19 +259,19 @@ function! lh#system#SysMove(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
-	else
-	  echoerr "SysMove: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
+        else
+          echoerr "SysMove: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -338,19 +284,19 @@ function! lh#system#SysCD(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
-	else
-	  echoerr "SysCD: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
+        else
+          echoerr "SysCD: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -363,20 +309,20 @@ function! lh#system#SysSort(...)
     let i = i + 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-	if a:{i} =~ '^-k=\d\+$\|^--k\%[ey]=\d\+$' 
-	  let a_i = substitute('-k=\|--k\%[ey]=', '/+', '')
-	else
-	  echoerr "SysSort: Non portable option: ".a:{i}
-	  return ''
-	endif
+        if a:{i} =~ '^-k=\d\+$\|^--k\%[ey]=\d\+$'
+          let a_i = substitute('-k=\|--k\%[ey]=', '/+', '')
+        else
+          echoerr "SysSort: Non portable option: ".a:{i}
+          return ''
+        endif
       else
-	let a_i = a:{i}
+        let a_i = a:{i}
       endif
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
     let res = res . ' ' . a_i
-  endwhile 
+  endwhile
   return res
 endfunction
 " }}}2
@@ -387,7 +333,7 @@ endfunction
 " Returns 0 : 0  -> the directory hasn't been created successfully
 "         1 : ok -> the directory has been created successfully
 " Note: for MsWindows system, this function transforms the path before
-" anything else. 
+" anything else.
 function! lh#system#EnsurePath(path)
   let path = a:path
   if has("dos16") || has("dos32") || has('win32') || has('win16')
@@ -419,9 +365,9 @@ function! s:EnsurePath_core(path)
       " A.2.a.i-  Recursivelly construct the parent directory.
       let r = s:EnsurePath_core(up)
       " A.2.a.ii- Return if an error has occurred.
-      if r != 1 
-	" call input('r= '.r)
-	return r 
+      if r != 1
+        " call input('r= '.r)
+        return r
       endif
     endif
     " A.2.b- the parent is root, implicitely, don't recurse.
@@ -444,13 +390,13 @@ endfunction
 " Return 0 : 0
 "        1 : ok
 " Note: This function calls mkdir on the last part of the directory and
-" checks that the creation went OK. 
+" checks that the creation went OK.
 function! s:EnsurePathLastDepth(path)
   " call input("LastDepth isdirectory(".a:path.") = ".isdirectory(a:path))
   if !isdirectory(a:path)
     if filereadable(a:path) " {{{3
       call lh#common#error_msg("A file is found were a folder is expected : " . a:path)
-      return 0 	" exit
+      return 0  " exit
     endif " }}}3
     let v:errmsg=""
     if &verbose >= 1 | echo "Create <".a:path.">\n" | endif
@@ -462,33 +408,33 @@ function! s:EnsurePathLastDepth(path)
       let path = a:path
     elseif has("win32") " {{{3
       if &shell =~ "sh"
-	let path = a:path
-	" let path = substitute(a:path,'\\','/', 'g')
-	""echo "system( 'mkdir ".path."')"
-	call system('mkdir '.escape(path, ' '))
+        let path = a:path
+        " let path = substitute(a:path,'\\','/', 'g')
+        ""echo "system( 'mkdir ".path."')"
+        call system('mkdir '.escape(path, ' '))
       else
-	let path = substitute(a:path,'/','\\', 'g')
-	let path = substitute(  path,'\\$','','')
-	""echo "system( 'md ".path."')"
-	if (path =~ ' ') && (has("dos16") || has("dos32") || has('win95'))
-	  " system('md name with spaces do not work')
-	  silent exe '!md "'.path.'"'
-	  " Other solution if we don't want to wait for user to hit <enter>:
-	  " parse the path and replace non-terminal occurences of
-	  " directories having spaces in their name with the short name
-	  " equivalent ; ie. "C:\Program Files\foo" --> "C:\Progra~1\foo"
-	else
-	  call system('md "'.path.'"')
-	endif
+        let path = substitute(a:path,'/','\\', 'g')
+        let path = substitute(  path,'\\$','','')
+        ""echo "system( 'md ".path."')"
+        if (path =~ ' ') && (has("dos16") || has("dos32") || has('win95'))
+          " system('md name with spaces do not work')
+          silent exe '!md "'.path.'"'
+          " Other solution if we don't want to wait for user to hit <enter>:
+          " parse the path and replace non-terminal occurences of
+          " directories having spaces in their name with the short name
+          " equivalent ; ie. "C:\Program Files\foo" --> "C:\Progra~1\foo"
+        else
+          call system('md "'.path.'"')
+        endif
       endif
     else " Other systems {{{3
       call lh#common#error_msg(
-	    \ "I don't know how to create directories on your system."
-	    \ "\nAny solution is welcomed! ".
-	    \ "Please, contact me at <hermitte"."@"."free.fr>")
+            \ "I don't know how to create directories on your system."
+            \ "\nAny solution is welcomed! ".
+            \ "Please, contact me at <hermitte"."@"."free.fr>")
     endif " }}}3
     "
-    " ¿ any error ? {{{3
+    " ? any error ? {{{3
     if strlen(v:errmsg) != 0
       call lh#common#error_msg(v:errmsg)
       return 0

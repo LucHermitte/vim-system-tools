@@ -1,9 +1,9 @@
 *system_utils.txt*      API plugin wrapping external file- and text-tools
-*system_utils.vim*      For Vim version 7.0.+   Last change: 14st Mar 2012
+*system_utils.vim*      For Vim version 7.0.+   Last change: 19th Apr 2015
 
 
                 system_utils Plugin MANUAL      by Luc Hermitte
-                        version 2.1.1           <hermitte {at} free {dot} fr>
+                        version 2.2.0           <hermitte {at} free {dot} fr>
 
 
 ------------------------------------------------------------------------------
@@ -16,6 +16,15 @@ Contents~
 |SU-credits|            Credits
 
 ------------------------------------------------------------------------------
+0. WARNING
+
+Many features of system-utils have started their migration to |lh-vim-lib|.
+My objective is to leave only the |:GoBash| commands (that I don't use anymore)
+and commands like |:EmuleUniq|.
+For the moment, the documentation is quite out-dated. Please, try to rely on
+|lh-vim-lib| instead of this plugin.
+
+
 1. Presentation                                         *SU-presentation*
 
 system_utils.vim defines wrappers for external tools and shells. The declared
@@ -67,7 +76,7 @@ boolean function: |UnixLayerInstalled()|.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 1.2. Ms-Windows specificities                           *SU-MsWindows*
 
-«Insert here»
+?Insert here?
 
 sort
 
@@ -250,11 +259,11 @@ I need to thank:
 - Piet Delport and Preben 'Peppe' Guldberg for their brainstorming that resulted
   in the `uniq' emulation proposed in system_utils.vim ;
 - Robert Webb for the emulation of `sort' he wrote ;
-- Jérôme Guigue that helped me test and debug parts of system_utils.vim ;
+- J?r?me Guigue that helped me test and debug parts of system_utils.vim ;
 - and Vim maintainers and developers of course. ^_^
 
 
 ------------------------------------------------------------------------------
- © Luc Hermitte, 2001-2015 <http://github.com/LucHermitte/vim-system-tools>
+ ? Luc Hermitte, 2001-2015 <http://github.com/LucHermitte/vim-system-tools>
  VIM: let b:VS_language = 'american'
  vim:ts=8:sw=4:tw=80:fo=tcq2:isk=!-~,^*,^\|,^\":ft=help:
