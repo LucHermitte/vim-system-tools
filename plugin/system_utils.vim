@@ -231,7 +231,7 @@ function! EmuleUniq() range
 endfunction
 
 " Based on the initial version proposed on the Vim ML by
-" Thomas K?hler <jean-luc {at} picard.franken {dot} de>
+" Thomas Köhler <jean-luc {at} picard.franken {dot} de>
 function! EmuleUniq0() range
   let l = a:firstline
   let e = a:lastline

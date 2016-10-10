@@ -76,7 +76,7 @@ boolean function: |UnixLayerInstalled()|.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 1.2. Ms-Windows specificities                           *SU-MsWindows*
 
-?Insert here?
+«Insert here»
 
 sort
 
@@ -259,11 +259,11 @@ I need to thank:
 - Piet Delport and Preben 'Peppe' Guldberg for their brainstorming that resulted
   in the `uniq' emulation proposed in system_utils.vim ;
 - Robert Webb for the emulation of `sort' he wrote ;
-- J?r?me Guigue that helped me test and debug parts of system_utils.vim ;
+- Jérôme Guigue that helped me test and debug parts of system_utils.vim ;
 - and Vim maintainers and developers of course. ^_^
 
 
 ------------------------------------------------------------------------------
- ? Luc Hermitte, 2001-2015 <http://github.com/LucHermitte/vim-system-tools>
+ © Luc Hermitte, 2001-2015 <http://github.com/LucHermitte/vim-system-tools>
  VIM: let b:VS_language = 'american'
  vim:ts=8:sw=4:tw=80:fo=tcq2:isk=!-~,^*,^\|,^\":ft=help:
