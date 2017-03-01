@@ -4,7 +4,7 @@
 "               <URL:http://github.com/LucHermitte/vim-system-tools>
 " Version:      3.0.0
 " Created:      28th aug 2002
-" Last Update:  04th Jan 2017
+" Last Update:  01st Mar 2017
 "------------------------------------------------------------------------
 " Description:  VimL wrappers for external utilities and shells
 "
@@ -222,7 +222,7 @@ function! s:Go_bash() " {{{3
   set shellxquote=\"
   " set shellxquote='"'
   set shellslash
-  :call lh#os#DetectSystem()
+  :call lh#os#system_detected()
 endfunction " }}}3
 " ----------------------------------------------------------------------
 function! s:Go_zsh() " {{{3
@@ -261,7 +261,7 @@ function! s:Go_zsh() " {{{3
     " Set shellslash in order to use correctly Cygwin.bat
     set shellslash
   endif
-  :call lh#os#DetectSystem()
+  :call lh#os#system_detected()
 endfunction " }}}3
 " ----------------------------------------------------------------------
 function! s:Go_cmd() " {{{3
@@ -280,7 +280,7 @@ function! s:Go_cmd() " {{{3
   set shellxquote=
   set shellredir=>
   set shellpipe=>
-  :call lh#os#DetectSystem()
+  :call lh#os#system_detected()
 endfunction " }}}3
 " }}}2
 " ----------------------------------------------------------------------
@@ -299,7 +299,7 @@ endif
 " ----------------------------------------------------------------------
 else
   " Do it on-the-fly when we need to do a CD or whatever
-  " call lh#os#DetectSystem()
+  " :call lh#os#system_detected()
 endif
 " Shell }}}1
 " ----------------------------------------------------------------------
