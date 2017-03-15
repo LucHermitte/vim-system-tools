@@ -4,7 +4,7 @@
 "               <URL:http://code.google.com/p/lh-vim/>
 " Version:      2.2.0
 " Created:      03rd Feb 2007
-" Last Update:  19th Apr 2015
+" Last Update:  03rd Jan 2017
 "------------------------------------------------------------------------
 " Description:  VimL wrappers for external utilities and shells
 "
@@ -58,7 +58,7 @@ function! lh#system#SystemDetected() abort
   return lh#os#system_detected()
 endfunction
 
-" Function: SystemDetected() : string        {{{1
+" Function: OnDOSWindows()   : string        {{{1
 function! lh#system#OnDOSWindows() abort
   echomsg "lh#system#OnDOSWindows is deprecated, please use lh#os#OnDOSWindows from lh-vim-lib"
   return lh#os#OnDOSWindows()
@@ -69,10 +69,10 @@ endfunction
 " System functions         {{{1
 " Function: SysPrint( file1 [, ...] ) : string               {{{2
 function! lh#system#SysPrint(...)
-  let res = SystemCmd('print')
+  let res = lh#os#SystemCmd('print')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
@@ -86,7 +86,7 @@ function! lh#system#SysPrint(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -94,10 +94,10 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysRemove( file1 [, ...] ) : string              {{{2
 function! lh#system#SysRemove(...)
-  let res = SystemCmd('remove')
+  let res = lh#os#SystemCmd('remove')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
@@ -114,7 +114,7 @@ function! lh#system#SysRemove(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -122,10 +122,10 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysRmdir( file1 [, ...] ) : string               {{{2
 function! lh#system#SysRmdir(...)
-  let res = SystemCmd('rmdir')
+  let res = lh#os#SystemCmd('rmdir')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
@@ -139,7 +139,7 @@ function! lh#system#SysRmdir(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -147,10 +147,10 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysMkdir( file1 [, ...] ) : string               {{{2
 function! lh#system#SysMkdir(...)
-  let res = SystemCmd('mkdir')
+  let res = lh#os#SystemCmd('mkdir')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
@@ -164,7 +164,7 @@ function! lh#system#SysMkdir(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -172,10 +172,10 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysCopy( file1 [, ...] ) : string                {{{2
 function! lh#system#SysCopy(...)
-  let res = SystemCmd('copy')
+  let res = lh#os#SystemCmd('copy')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
@@ -192,7 +192,7 @@ function! lh#system#SysCopy(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -200,10 +200,10 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysCopyDir( file1 [, ...] ) : string             {{{2
 function! lh#system#SysCopyDir(...)
-  let res = SystemCmd('copydir')
+  let res = lh#os#SystemCmd('copydir')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$'              | let a_i = '/?'
@@ -220,7 +220,7 @@ function! lh#system#SysCopyDir(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -228,10 +228,10 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysTouch( file1 [, ...] ) : string               {{{2
 function! lh#system#SysTouch(...)
-  let res = SystemCmd("touch")
+  let res = lh#os#SystemCmd("touch")
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
@@ -245,7 +245,7 @@ function! lh#system#SysTouch(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -253,10 +253,10 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysMove( file1 [, ...] ) : string                {{{2
 function! lh#system#SysMove(...)
-  let res = SystemCmd('move')
+  let res = lh#os#SystemCmd('move')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
@@ -270,7 +270,7 @@ function! lh#system#SysMove(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -278,35 +278,16 @@ endfunction
 "------------------------------------------------------------------------
 " Function: SysCD( path [, ...] ) : string                   {{{2
 function! lh#system#SysCD(...)
-  let res = SystemCmd('cd')
-  let i = 0
-  while i != a:0
-    let i = i + 1
-    if a:{i} =~ '^[-+]' " options
-      if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
-        if a:{i} =~ '^-h$\|^--h\%[elp]$' | let a_i = '/?'
-        else
-          echoerr "SysCD: Non portable option: ".a:{i}
-          return ''
-        endif
-      else
-        let a_i = a:{i}
-      endif
-    else                " files
-      let a_i = lh#system#FixPathName(a:{i})
-    endif
-    let res = res . ' ' . a_i
-  endwhile
-  return res
+  return call('lh#os#sys_cd', a:000)
 endfunction
 " }}}2
 "------------------------------------------------------------------------
 " Function: SysSort( file1 [, ...] ) : string                {{{2
 function! lh#system#SysSort(...)
-  let res = SystemCmd('sort')
+  let res = lh#os#SystemCmd('sort')
   let i = 0
   while i != a:0
-    let i = i + 1
+    let i += 1
     if a:{i} =~ '^[-+]' " options
       if lh#system#SystemDetected() == 'msdos' && !lh#system#UnixLayerInstalled()
         if a:{i} =~ '^-k=\d\+$\|^--k\%[ey]=\d\+$'
@@ -321,7 +302,7 @@ function! lh#system#SysSort(...)
     else                " files
       let a_i = lh#system#FixPathName(a:{i})
     endif
-    let res = res . ' ' . a_i
+    let res .= ' ' . a_i
   endwhile
   return res
 endfunction
@@ -449,6 +430,34 @@ function! s:EnsurePathLastDepth(path)
   endif
 endfunction
 " }}}2
+"------------------------------------------------------------------------
+" Command: :Uniq           {{{1
+" Function: lh#system#EmuleUniq() range
+" Use: As it is a `range' function, call it with:
+"       :%call EmuleUniq()
+"       :'<,'>call EmuleUniq()
+"       :3,6call EmuleUniq()
+"       etc
+function! lh#system#EmuleUniq() range
+  let l1 = a:firstline
+  let l2 = a:lastline
+  if l1 < l2
+    " Version1 from: Preben 'Peppe' Guldberg <peppe {at} xs4all {dot} nl>
+    " silent exe l1 . ',' . (l2 - 1) . 's/^\(.*\)\%(\n\%<' . (l2 + 1)
+          " \ . 'l\1$\)\+/\1/e'
+
+    " Version from: Piet Delport <pjd {at} 303.za {dot} net>
+    " silent exe l1.','l2.'g/^\%<'.l2.'l\(.*\)\n\1$/d'
+
+    " Version1 from: Preben & Piet
+    " <line1>,<line2>-g/^\(.*\)\n\1$/d
+    silent exe l1.','l2.'-g/^\(.*\)\n\1$/d _'
+
+    call histdel('search', -1)          " necessary
+    " let @/ = histget('search', -1)    " useless within a function
+  endif
+endfunction
+
 "------------------------------------------------------------------------
 " }}}1
 "=============================================================================
