@@ -4,7 +4,7 @@
 "               <URL:http://github.com/LucHermitte/vim-system-tools>
 " Version:      3.0.0
 " Created:      28th aug 2002
-" Last Update:  01st Mar 2017
+" Last Update:  16th Jan 2019
 "------------------------------------------------------------------------
 " Description:  VimL wrappers for external utilities and shells
 "
@@ -47,13 +47,14 @@
 "=============================================================================
 
 " Avoid reinclusion {{{1
+let s:cpo_save=&cpo
+set cpo&vim
 if exists("g:loaded_system_utils") &&
       \ (!exists('g:force_reload_system_utils') || !g:force_reload_system_utils)
+  let &cpo=s:cpo_save
   finish
 endif
 let g:loaded_system_utils = 300
-let s:cpo_save=&cpo
-set cpo&vim
 let s:sfile = expand('<sfile>:p')
 " }}}1
 "=============================================================================
@@ -302,7 +303,6 @@ else
   " :call lh#os#system_detected()
 endif
 " Shell }}}1
-" ----------------------------------------------------------------------
 "=============================================================================
 let &cpo=s:cpo_save
 
