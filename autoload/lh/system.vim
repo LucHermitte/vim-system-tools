@@ -4,7 +4,7 @@
 "               <URL:http://code.google.com/p/lh-vim/>
 " Version:      2.2.0
 " Created:      03rd Feb 2007
-" Last Update:  03rd Jan 2017
+" Last Update:  03rd Jul 2017
 "------------------------------------------------------------------------
 " Description:  VimL wrappers for external utilities and shells
 "
@@ -84,7 +84,7 @@ function! lh#system#SysPrint(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -112,7 +112,7 @@ function! lh#system#SysRemove(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -137,7 +137,7 @@ function! lh#system#SysRmdir(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -162,7 +162,7 @@ function! lh#system#SysMkdir(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -190,7 +190,7 @@ function! lh#system#SysCopy(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -218,7 +218,7 @@ function! lh#system#SysCopyDir(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -243,7 +243,7 @@ function! lh#system#SysTouch(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -268,7 +268,7 @@ function! lh#system#SysMove(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
@@ -300,7 +300,7 @@ function! lh#system#SysSort(...)
         let a_i = a:{i}
       endif
     else                " files
-      let a_i = lh#system#FixPathName(a:{i})
+      let a_i = lh#path#fix(a:{i})
     endif
     let res .= ' ' . a_i
   endwhile
